@@ -24,7 +24,30 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-analytics.js"></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyCoB_i-QhgrvHfk-S6cQeM_HhO_qLv59-I",
+        authDomain: "kudo-344d6.firebaseapp.com",
+        databaseURL: "https://kudo-344d6.firebaseio.com",
+        projectId: "kudo-344d6",
+        storageBucket: "kudo-344d6.appspot.com",
+        messagingSenderId: "896922984879",
+        appId: "1:896922984879:web:d43247ec0294cd50738f5a",
+        measurementId: "G-PVSTECC9QC"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+    </script>
+    <title>Kudo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
