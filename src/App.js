@@ -30,7 +30,7 @@ export default class App extends React.Component {
 
   state = {
     votes: [],
-    nameUser: 'Usuário',
+    nameUser: 'Login',
     blue: 0,
     pink: 0,
     yellow: 0,
@@ -41,6 +41,7 @@ export default class App extends React.Component {
     super(props)
 
     this.logout = this.logout.bind(this)
+    this.option = this.option.bind(this)
   }
 
   componentDidMount(){
@@ -62,7 +63,7 @@ export default class App extends React.Component {
       })
 
       var refBaseUser = firebase.database().ref('users/' + user.uid )
-      refBaseUser.once('value', function(snapshot){
+      refBaseUser.on('value', function(snapshot){
 
         var value = snapshot.val()
         if(value === null){ 
@@ -79,19 +80,20 @@ export default class App extends React.Component {
       var refPointsUser = firebase.database().ref('users/' + user.uid + '/points')
       refPointsUser.on('value', function(snapshot){
         var value = snapshot.val()
-        console.log(value)
 
-        refThis.setState({
-          blue: value.blue,
-          yellow: value.yellow,
-          pink: value.pink
-        })
+        if(value){
+          refThis.setState({
+            blue: value.blue,
+            yellow: value.yellow,
+            pink: value.pink
+          })
+        }
       })
 
       } else {
       // No user is signed in.
         refThis.setState({
-          nameUser: "Usuário",
+          nameUser: "Login",
           imageUser: 'https://firebasestorage.googleapis.com/v0/b/kudo-344d6.appspot.com/o/user.png?alt=media&token=cd87a326-b63e-476d-bb61-ec255cbcae52'
         })
       }
@@ -99,12 +101,13 @@ export default class App extends React.Component {
 
     
     var firebaseRef = firebase.database().ref('votes')
-    firebaseRef.once('value', function(snapshot){
+    firebaseRef.on('value', function(snapshot){
       var peoples = snapshot.val()
       var array = []
 
       for (var [key, value] of Object.entries(peoples)) {
-           array.push(value)
+            value.key = key
+            array.push(value)
       }
       refThis.setState({
         votes: array
@@ -164,7 +167,7 @@ export default class App extends React.Component {
     firebase.auth().signOut().then(function() {
       // Sign-out successful.
       refThis.setState({
-        nameUser: "Usuário",
+        nameUser: "Login",
         imageUser: 'https://firebasestorage.googleapis.com/v0/b/kudo-344d6.appspot.com/o/user.png?alt=media&token=cd87a326-b63e-476d-bb61-ec255cbcae52',
         blue: 0,
         yellow: 0,
@@ -178,9 +181,38 @@ export default class App extends React.Component {
     });
   }
 
+  option(key, color){
+    var pointsColor = this.state[color]
+
+    var user = firebase.auth().currentUser
+    
+    if(pointsColor >= 1){
+
+      var refPoints = firebase.database().ref('users/'+ user.uid + '/points/' + color)
+      var refVotes = firebase.database().ref('users/' + user.uid + '/votes/' + key + '+' + color)
+      var refPeople = firebase.database().ref('votes/' + key + '/kudos/' + user.uid + '+' +  color)
+
+      refVotes.set(true)
+      refPeople.set(true)
+
+      refPoints.transaction(function(currentClicks) {            
+            return (currentClicks || 0) - 1
+      })
+
+      new Noty({
+        title: 'Success', 
+        text: 'Kudo Efetuado',
+        type: 'success' 
+      }).show();
+    }
+  }
+
+
   render() {
 
     var { votes, nameUser, imageUser, blue, pink, yellow } = this.state
+
+    var refThis = this
 
     return(
       <div className="App">
@@ -201,13 +233,13 @@ export default class App extends React.Component {
           </div>
           <div className="Total-Selos">
             <div className="Selo Blue"><div className="Emoji">👨‍🎓</div><div className="Point">{blue}</div></div>
-            <div className="Selo Yellow"><div className="Emoji">👏</div><div className="Point">{pink}</div></div>
-            <div className="Selo Pink"><div className="Emoji">🙏</div><div className="Point">{yellow}</div></div>
+            <div className="Selo Yellow"><div className="Emoji">👏</div><div className="Point">{yellow}</div></div>
+            <div className="Selo Pink"><div className="Emoji">🙏</div><div className="Point">{pink}</div></div>
           </div>
         </div>
         <div className="Votes">
           { votes.map(function(d, idx){
-           return (
+            return (
                <div className="Vote">
                 <img src={d.photo}/>
                 <div className="Wrap">
@@ -216,9 +248,9 @@ export default class App extends React.Component {
                     <h3>{d.name}</h3>
                   </div>
                   <div className="Total-Selos">
-                    <div className="Selo Blue"><div className="Emoji">👨‍🎓</div></div>
-                    <div className="Selo Yellow"><div className="Emoji">👏</div></div>
-                    <div className="Selo Pink"><div className="Emoji">🙏</div></div>
+                    <div className="Selo Blue" onClick={() => refThis.option(d.key, "blue")}><div className="Emoji">👨‍🎓</div></div>
+                    <div className="Selo Yellow" onClick={() => refThis.option(d.key, "yellow")}><div className="Emoji">👏</div></div>
+                    <div className="Selo Pink" onClick={() => refThis.option(d.key, "pink")}><div className="Emoji">🙏</div></div>
                   </div>
                 </div>
             </div>
