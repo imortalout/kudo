@@ -37,9 +37,23 @@ function Options(props){
     }
 }
 
+function timeConverter(UNIX_timestamp){
+  var a = new Date(UNIX_timestamp);
+  var months = ['Jan','Fev','Mar','Abril','Maio','Jun','Jul','Ag','Set','Out','Nov','Dez'];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var hour = a.getHours();
+  var min = a.getMinutes();
+  var sec = a.getSeconds();
+  var time = date + ' ' + month + ' - ' + hour + ':' + min;
+  return time;
+}
+
 export default class App extends React.Component {
 
   state = {
+    date: null,
     votes: [],
     kudos: [],
     nameUser: 'Login',
@@ -75,6 +89,16 @@ export default class App extends React.Component {
         refThis.setState({  
           nameUser: displayName,
           imageUser: photoUrl
+        })
+
+        var refTime = firebase.database().ref('users/' + user.uid + '/time')
+
+        refTime.on('value', function(snapshot){
+          var value = snapshot.val()
+
+          var time = timeConverter(value)
+
+          refThis.setState({date: time})
         })
 
         // Verificação dos pontos
@@ -131,16 +155,11 @@ export default class App extends React.Component {
       var peoples = snapshot.val()
       var array = []
 
-      console.log(peoples)
-
       if(peoples){
         for (var [key, value] of Object.entries(peoples)) {
             value.key = key
             
             var kudos = value.kudos 
-
-            console.log(value)
-
             var blue = 0
             var pink = 0
             var yellow = 0
@@ -156,13 +175,11 @@ export default class App extends React.Component {
                 }
               }
             }
-
           
             value.blue = blue
             value.pink = pink
             value.yellow = yellow
 
-            console.log(value)  
             array.push(value)
         }
       }
@@ -181,19 +198,6 @@ export default class App extends React.Component {
         for (var [key, value] of Object.entries(historys)) {
             value.key = key
 
-            function timeConverter(UNIX_timestamp){
-              var a = new Date(UNIX_timestamp);
-              var months = ['Jan','Fev','Mar','Abril','Maio','Jun','Jul','Ag','Set','Out','Nov','Dez'];
-              var year = a.getFullYear();
-              var month = months[a.getMonth()];
-              var date = a.getDate();
-              var hour = a.getHours();
-              var min = a.getMinutes();
-              var sec = a.getSeconds();
-              var time = date + ' ' + month + ' - ' + hour + ':' + min;
-              return time;
-            }
-
             var time = timeConverter(value.vote.time)
 
             var newObject = {
@@ -204,9 +208,7 @@ export default class App extends React.Component {
               option: value.to.color, 
               time: time
             }
-
             array.push(newObject)
-            
         }
 
         array.sort(function (a, b) {
@@ -240,6 +242,7 @@ export default class App extends React.Component {
         var refData = firebase.database() 
 
         var refPoints = refData.ref('users/'+ user.uid + '/points/' + color)
+        var refTime = refData.ref('users/'+ user.uid + '/time/')
         var refVotes = refData.ref('users/' + user.uid + '/votes/').push()
         var refPeople = refData.ref('votes/' + key + '/kudos/').push()
         var refHistory = refData.ref('history').push()
@@ -252,6 +255,8 @@ export default class App extends React.Component {
           color: color,
           time: timeStamp
         }
+
+        refTime.set(timeStamp)
 
         var toPeople = {
           name: user.displayName,
@@ -340,7 +345,8 @@ export default class App extends React.Component {
         imageUser: 'https://firebasestorage.googleapis.com/v0/b/kudo-344d6.appspot.com/o/user.png?alt=media&token=cd87a326-b63e-476d-bb61-ec255cbcae52',
         blue: 0,
         yellow: 0,
-        pink: 0
+        pink: 0,
+        date: null
       })
       new Noty({
           title: 'Certo', 
@@ -381,7 +387,7 @@ export default class App extends React.Component {
 
   render() {
 
-    var { votes, nameUser, imageUser, blue, pink, yellow, openFeed, feed, kudos, data, options } = this.state
+    var { votes, nameUser, imageUser, blue, pink, yellow, openFeed, feed, kudos, data, options, date } = this.state
 
     var refThis = this
 
@@ -405,7 +411,7 @@ export default class App extends React.Component {
         <div className="Selos">
           <div className="Title">
             <h2>Selos Disponíveis</h2>
-            <p>Atualizado em 01/04/2020</p>
+            <p>Atualizado em {date}</p>
           </div>
           <div className="Total-Selos">
             <div className="Selo Blue"><div className="Emoji">👨‍🎓</div><div className="Point">{blue}</div></div>
