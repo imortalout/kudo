@@ -129,6 +129,7 @@ h2 {
   margin: 0;
   font-weight: 500;
   font-size: 12px;
+  text-align: center;
 }
 
 .Wrap h3 {
@@ -178,3 +179,122 @@ h2 {
   align-items: center;
   justify-content: center;
 }
+
+.noty_bar {
+  border-radius: 6px !important;
+  padding: 4px !important;
+}
+
+.Options {
+  margin-right: 24px;
+}
+
+.SideBar {
+  cursor: pointer;
+}
+
+.Kudos.false .Feed {
+  position: fixed;
+  right: -200px;
+  top: 120px;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.Kudos.true .Feed {
+  position: fixed;
+  top: 120px;
+  right: 20px;
+  width: 400px;
+  height: 80vh;
+  background-color: white;
+  opacity: 1;
+  box-shadow: 0px 0px 6px rgba(29, 29, 29, 0.3);
+  border-radius: 6px;
+  z-index: 1;
+  box-sizing: border-box;
+}
+
+.Feed h3 {
+  padding: 20px;
+  margin: 0;
+}
+
+.Kudos .Background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /*background: rgba(36, 33, 33, 0.4);*/
+  z-index: 0;
+}
+
+.Kudos .Kudo {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  padding: 20px 10px;
+  box-sizing: border-box;
+  position: relative;
+  
+}
+
+.Kudo:before {
+  content: "";
+  width: 100%;
+  height: 2px;
+  background-color: #C4C4C4;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.Kudo .peopleVote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Kudo .OptionsKudo {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.peopleVote img {
+  width: 40px;
+  border-radius: 50%;
+  height: 40px;
+}
+
+.peopleVote p {
+  font-size: 12px;
+  max-width: 60px;
+  text-align: center;
+}
+
+.OptionsKudo .Selo {
+  margin-top: 10px;
+}
+
+.KudoTime {
+  font-size: 10px;
+  position: absolute;
+  right: 10px;
+  bottom: 0px;
+  opacity: 0.6;
+}
+
+.FeedKudo {
+  overflow: scroll;
+  height: 65vh;
+  padding: 20px;
+}
+
+
+
+
+
+
