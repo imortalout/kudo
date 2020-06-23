@@ -131,31 +131,38 @@ export default class App extends React.Component {
       var peoples = snapshot.val()
       var array = []
 
+      console.log(peoples)
+
       if(peoples){
         for (var [key, value] of Object.entries(peoples)) {
             value.key = key
             
             var kudos = value.kudos 
 
+            console.log(value)
+
             var blue = 0
             var pink = 0
             var yellow = 0
 
-            for (var [key, value] of Object.entries(kudos)){
-              if(value.color === 'pink'){
-                pink = pink + 1
-              } else if (value.color === 'yellow'){
-                yellow = yellow + 1
-              } else {
-                blue =  blue + 1
+            if(kudos){
+              for (var [key, valueNow] of Object.entries(kudos)){
+                if(valueNow.color === 'pink'){
+                  pink = pink + 1
+                } else if (valueNow.color === 'yellow'){
+                  yellow = yellow + 1
+                } else {
+                  blue =  blue + 1
+                }
               }
             }
 
+          
             value.blue = blue
             value.pink = pink
             value.yellow = yellow
 
-            console.log(value)
+            console.log(value)  
             array.push(value)
         }
       }
