@@ -9,9 +9,13 @@
     "firebase": "^7.15.1",
     "noty": "^3.2.0-beta",
     "react": "^16.13.1",
+    "react-chartjs": "^1.2.0",
+    "react-chartjs-2": "^2.9.0",
+    "react-d3": "^0.4.0",
     "react-dom": "^16.13.1",
     "react-feather": "^2.0.8",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "react-vis": "^1.11.7"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -90,8 +90,8 @@ h2 {
 
 
 .Votes .Vote {
-  width: 200px;
-  height: 200px;
+  width: 250px;
+  height: 250px;
   position: relative;
 }
 
@@ -290,7 +290,7 @@ h2 {
 .FeedKudo {
   overflow: scroll;
   height: 65vh;
-  padding: 20px;
+  padding: 0px 20px;
   padding-bottom: 40px;
 }
 
