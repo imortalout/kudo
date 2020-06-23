@@ -49,39 +49,6 @@ export default class App extends React.Component {
     feed: false,
     openFeed: false,
     imageUser: 'https://firebasestorage.googleapis.com/v0/b/kudo-344d6.appspot.com/o/user.png?alt=media&token=cd87a326-b63e-476d-bb61-ec255cbcae52',
-    data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
-        }
-    }
   }
 
   constructor(props) {
@@ -167,6 +134,28 @@ export default class App extends React.Component {
       if(peoples){
         for (var [key, value] of Object.entries(peoples)) {
             value.key = key
+            
+            var kudos = value.kudos 
+
+            var blue = 0
+            var pink = 0
+            var yellow = 0
+
+            for (var [key, value] of Object.entries(kudos)){
+              if(value.color === 'pink'){
+                pink = pink + 1
+              } else if (value.color === 'yellow'){
+                yellow = yellow + 1
+              } else {
+                blue =  blue + 1
+              }
+            }
+
+            value.blue = blue
+            value.pink = pink
+            value.yellow = yellow
+
+            console.log(value)
             array.push(value)
         }
       }
@@ -237,8 +226,7 @@ export default class App extends React.Component {
 
     // Verifica se existe o usuario
     var user = firebase.auth().currentUser
-    console.log(vote)
-    console.log(user)
+    
     if(user){
       if(pointsColor >= 1){
 
@@ -429,9 +417,9 @@ export default class App extends React.Component {
                     <h3>{d.name}</h3>
                   </div>
                   <div className="Total-Selos">
-                    <div className="Selo Blue" onClick={() => refThis.option(d.key, "blue")}><div className="Emoji">👨‍🎓</div></div>
-                    <div className="Selo Yellow" onClick={() => refThis.option(d.key, "yellow")}><div className="Emoji">👏</div></div>
-                    <div className="Selo Pink" onClick={() => refThis.option(d.key, "pink")}><div className="Emoji">🙏</div></div>
+                    <div className="Selo Blue" onClick={() => refThis.option(d.key, "blue")}><div className="Emoji">👨‍🎓</div><div className="Point">{d.blue}</div></div>
+                    <div className="Selo Yellow" onClick={() => refThis.option(d.key, "yellow")}><div className="Emoji">👏<div className="Point">{d.yellow}</div></div></div>
+                    <div className="Selo Pink" onClick={() => refThis.option(d.key, "pink")}><div className="Emoji">🙏<div className="Point">{d.pink}</div></div></div>
                   </div>
                 </div>
             </div>
