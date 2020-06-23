@@ -177,7 +177,19 @@ export default class App extends React.Component {
             }
 
             array.push(newObject)
+            
         }
+
+        array.sort(function (a, b) {
+          if (a.time > b.time) {
+              return -1
+          }
+          if (a.time < b.time) {
+              return 1
+          }
+          return 0 
+      })
+
         refThis.setState({
           kudos: array
         })
